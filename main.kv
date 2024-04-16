@@ -1,0 +1,67 @@
+<MainWindow>:
+	container: container
+
+	BoxLayout:
+	    cols: 1
+	    orientation: 'vertical'
+        size: root.width, root.height
+        padding: 2
+
+        MDTopAppBar:
+            id: reload_btn_icon
+            title: "Server List:"
+            elevation: 1
+            md_bg_color: app.theme_cls.accent_color
+            right_action_items: [["dice-d20-outline", lambda x: root.dysplay_disce_card()],["reload", lambda x: root.go_to_screen2()]]
+
+
+        MDBottomNavigation:
+            panel_color: "orange"
+            selected_color_background: '#0080ff' # '#2874ff'
+            text_color_active: (.1, .1 , .3, 1)
+
+            MDBottomNavigationItem:
+                name: 'screen 1'
+                text: 'Single Dice'
+                icon: 'dice-d20'
+                badge_icon: "numeric-1"
+
+                GridLayout:
+                    cols: 2
+                    padding: 10
+
+                    spacing: "15dp"
+                    id: container
+
+            MDBottomNavigationItem:
+                name: 'screen 2'
+                text: 'Multi Dice'
+                icon: 'dice-multiple'
+                badge_icon: "dice-d20-outline"
+
+<DiceCard>
+    padding: 10
+    size_hint: (0.3), None
+    size: root.width, "100dp"
+
+    MDRelativeLayout:
+
+        MDIconButton:
+            icon: "plus"
+            pos_hint: {"top": 1, "right": 1}
+
+        MDIconButton:
+            icon: "minus"
+            pos_hint: {"bot": 1, "right": 1}
+
+        MDIconButton:
+            icon: "dice-d20"
+            pos_hint: {"top": 1, "left": 1}
+
+        MDLabel:
+            id: label
+            text: root.text
+            adaptive_size: True
+            color: "grey"
+            pos: "12dp", "12dp"
+            bold: True
