@@ -1,8 +1,23 @@
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
+
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    focus_behavior: False
+    selected_color: "#4a4939"
+    _no_ripple_effect: True
+
+
 <MainWindow>:
 	container: container
 
 	BoxLayout:
-	    cols: 1
 	    orientation: 'vertical'
         size: root.width, root.height
         padding: 2
@@ -12,6 +27,7 @@
             title: "Server List:"
             elevation: 1
             md_bg_color: app.theme_cls.accent_color
+            #left_action_items:[["menu", lambda x: nav_drawer.set_state("open")]]
             right_action_items: [["dice-d20-outline", lambda x: root.dysplay_disce_card()],["reload", lambda x: root.go_to_screen2()]]
 
 
@@ -22,41 +38,158 @@
 
             MDBottomNavigationItem:
                 name: 'screen 1'
-                text: 'Single Dice'
+                text: 'Roll Dice!'
                 icon: 'dice-d20'
-                badge_icon: "numeric-1"
+                #badge_icon: "numeric-1"
 
-                GridLayout:
-                    cols: 2
-                    padding: 10
+                BoxLayout:
+                    orientation: 'vertical'
+                    size: root.width, root.height
+                    padding: 2
 
-                    spacing: "15dp"
-                    id: container
+                    GridLayout:
+                        cols: 2
+                        padding: 10
+
+                        spacing: "15dp"
+                        id: container
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size: root.width, root.height
+                        padding: 30
+                        spacing: "15dp"
+
+                        MDRectangleFlatIconButton:
+                            icon: "diamond-stone"
+                            text: "Reset Dice"
+                            theme_text_color: "Custom"
+                            text_color: "blue"
+                            line_color: "red"
+                            theme_icon_color: "Custom"
+                            icon_color: "orange"
+                            pos_hint: {"center_x": .4, "center_y": .4}# only x works here
+                            size_hint: (0.4), None
+
+                        MDRectangleFlatIconButton:
+                            icon: "duck"
+                            text: "Roll All Dice!"
+                            theme_text_color: "Custom"
+                            text_color: "green"
+                            line_color: "red"
+                            theme_icon_color: "Custom"
+                            icon_color: "orange"
+                            pos_hint: {"center_x": .6, "center_y": .1}# only x works here
+                            size_hint: (0.4), None
+                            on_release:
+                                root.roll_dice()
 
             MDBottomNavigationItem:
                 name: 'screen 2'
-                text: 'Multi Dice'
-                icon: 'dice-multiple'
-                badge_icon: "dice-d20-outline"
+                text: 'Items'
+                icon: 'axe-battle'
+                #badge_icon: "dice-d20-outline"
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size: root.width, root.height
+                    padding: 30
+                    spacing: "15dp"
+
+                    MDRectangleFlatIconButton:
+                        icon: "diamond-stone"
+                        text: "Items"
+                        theme_text_color: "Custom"
+                        text_color: "blue"
+                        line_color: "red"
+                        theme_icon_color: "Custom"
+                        icon_color: "orange"
+                        pos_hint: {"center_x": .4, "center_y": .4}# only x works here
+                        size_hint: (0.4), None
+
+            MDBottomNavigationItem:
+                name: 'screen 3'
+                text: 'Status'
+                icon: 'book-open-variant' #'book-edit'
+                #badge_icon: "dice-d20-outline"
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size: root.width, root.height
+                    padding: 30
+                    spacing: "15dp"
+
+                    MDRectangleFlatIconButton:
+                        padding: 15
+                        icon: "duck"
+                        text: "Status"
+                        theme_text_color: "Custom"
+                        text_color: "green"
+                        line_color: "red"
+                        theme_icon_color: "Custom"
+                        icon_color: "orange"
+                        pos_hint: {"center_x": .6, "center_y": .1}# only x works here
+                        size_hint: (0.4), None
+
+
+    MDNavigationDrawer:
+        id: nav_drawer
+        radius: (0, 16, 16, 0)
+
+        MDNavigationDrawerMenu:
+
+            MDNavigationDrawerHeader:
+                title: "Header title"
+                title_color: "#4a4939"
+                text: "Header text"
+                spacing: "4dp"
+                padding: "12dp", 0, 0, "56dp"
+
+            MDNavigationDrawerLabel:
+                text: "Mail"
+
+            DrawerClickableItem:
+                icon: "gmail"
+                right_text: "+99"
+                text_right_color: "#4a4939"
+                text: "Inbox"
+
+            MDNavigationDrawerDivider:
+
+            MDNavigationDrawerLabel:
+                text: "Mail"
+
+            DrawerClickableItem:
+                icon: "gmail"
+                right_text: "+99"
+                text_right_color: "#4a4939"
+                text: "Inbox"
 
 <DiceCard>
+    radius: (5, 5, 5, 5)
     padding: 10
     size_hint: (0.3), None
     size: root.width, "100dp"
 
     MDRelativeLayout:
-
         MDIconButton:
+            id: card_id
             icon: "plus"
             pos_hint: {"top": 1, "right": 1}
+            on_release:
+                app.main_window.plus_button(root.card_id)
 
         MDIconButton:
             icon: "minus"
             pos_hint: {"bot": 1, "right": 1}
+            on_release:
+                app.main_window.minus_button(root.card_id)
 
         MDIconButton:
-            icon: "dice-d20"
+            icon: root.dice_icon #"dice-d20"
             pos_hint: {"top": 1, "left": 1}
+            on_release:
+                app.main_window.icon_button(root.card_id)
 
         MDLabel:
             id: label

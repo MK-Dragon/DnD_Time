@@ -12,6 +12,7 @@ from kivymd.uix.card import MDCard
 from random import randint, choice
 
 
+
 def Roll_Dice(num_rolls:int, dice:int) -> list:
     '''Roll 2d6 -> [a, b]'''
     rolls = []
@@ -28,28 +29,59 @@ class MainWindow(Screen):
     '''Using root. from KV file you can use funtions from the Class.'''
 
     container = ObjectProperty(None)
+    dice_to_roll = []
 
     def on_kv_post(self, base_widget):
         self.dysplay_disce_card()
 
     def dysplay_disce_card(self):
+        # Clear widget
         self.ids.container.clear_widgets(children=None)
-        for i in range(6):
+
+        # list of dice
+        dice = [4, 6, 8, 10, 12, 20]
+
+        # radius change
+        a = 0
+        rad_b = (5, 30, 5, 30)
+        rad_a = (30, 5, 30, 5)
+
+        for i in dice:
+            rad = rad_a if a % 2 == 0 else rad_b
+            a += 1
+
             self.ids.container.add_widget(
                 DiceCard(
+                    radius = rad,
+                    card_id=f'{i}',
                     line_color=(0.2, 0.2, 0.2, 0.8),
                     style="elevated",
-                    text=f'Card {i}',
+                    text=f'Roll [n] d{i}',
+                    dice_icon=f'dice-d{i}',
                     md_bg_color="#f6eeee",
                     shadow_softness=2,
                     shadow_offset=(0, 1)
                 )
             )
 
+    def plus_button(self, instance):
+        i = instance
+        print(f'(+) {i} - {type(i) = }')
+
+    def minus_button(self, instance):
+        i = instance
+        print(f'(-) {i} - {type(i) = }')
+
+    def icon_button(self, instance):
+        i = instance
+        print(f'Icon [{i}]')
 
 
 class DiceCard(MDCard):
     text = ObjectProperty(None)
+    dice_icon = ObjectProperty(None)
+    card_id = ObjectProperty(None)
+
 
 
 class Main(MDApp):

@@ -15,6 +15,7 @@ def roll_multi_dice(num_rolls:int, dice:int) -> list:
     return rolls
 
 
+# Mix of roll_multi_dice + roll_dice -> main.py
 def Roll_Dice(num_rolls:int, dice:int) -> list:
     '''Roll 2d6 -> [a, b]'''
     rolls = []
