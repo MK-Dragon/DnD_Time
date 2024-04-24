@@ -3,12 +3,15 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.uix.screenmanager import Screen
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window # Remove before py --> apk
+from kivy.uix.boxlayout import BoxLayout
 
 #KivyMD:
 from kivymd.app import MDApp
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
+from kivymd.uix.list import IconLeftWidget
+from kivymd.uix.list import OneLineAvatarIconListItem
 
 #Others:
 from random import randint, choice
@@ -68,12 +71,10 @@ class MainWindow(Screen):
             )
 
     def plus_button(self, id):
-        #print(f'(+) {id} - {type(id) = }')
         self.dice_to_roll[f'{id}'] += 1
         self.display_disce_card()
 
     def minus_button(self, id):
-        #print(f'(-) {id} - {type(id) = }')
 
         if self.dice_to_roll[f'{id}'] > 0:
             self.dice_to_roll[f'{id}'] -= 1
@@ -88,31 +89,51 @@ class MainWindow(Screen):
             self.dice_to_roll.update({f'{i}': 0})
 
     def roll_dice_button(self):
+        dialog = None # Reset
         results = [] # ('d6, [3,6,1], 10)
+
         print("\nRolling:")
         for d in self.dice_to_roll:
             num_rolls = self.dice_to_roll[d]
             if num_rolls > 0:
-                print(f'\t{num_rolls}d{d}')
+                #print(f'\t{num_rolls}d{d}')
 
                 rr = Roll_Dice(num_rolls=num_rolls, dice=int(d))
                 results.append((f'd{d}', rr, sum(rr)))
+
+        # sorting:
+        items_roll = []
         print("resultados:")
         for i in results:
-            print('\t', i)
+            dice, rolls, total = i
+            rolls_str = ''
+            for val in rolls:
+                rolls_str += f' [{val}]'
+            print(f'{rolls_str = }')
 
-        if not self.dialog:
-            self.dialog = MDDialog(
-                text="Discard draft?",
-                buttons=[
-                    MDFlatButton(
-                        text="OK",
-                        theme_text_color="Custom",
-                        text_color=main_app.theme_cls.primary_color,
-                        on_release=lambda x: self.dialog.dismiss()
-                    ),
-                ],
+            items_roll.append(
+                OneLineAvatarIconListItem(
+                    IconLeftWidget(icon="duck"),
+                    text=rolls_str
+                )
             )
+            #print('\t', i)
+
+        # Popup:
+        self.dialog = MDDialog(
+            title="Rolls:",
+            type="confirmation",
+            items=items_roll,
+            content_cls=PopupRolls(),
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    text_color=main_app.theme_cls.primary_color,
+                    on_release=lambda x: self.dialog.dismiss()
+                ),
+            ],
+        )
         self.dialog.open()
 
 
@@ -122,6 +143,8 @@ class DiceCard(MDCard):
     dice_icon = ObjectProperty(None)
     card_id = ObjectProperty(None)
 
+class PopupRolls(BoxLayout):
+    pass
 
 
 class Main(MDApp):
@@ -137,7 +160,7 @@ class Main(MDApp):
         #self.theme_cls.primary_palette = "LightBlue"
         #self.theme_cls.accent_palette = "Orange"
         self.THEME_pri = "#fcbc0d" # Orange
-        self.THEME_pri_light = "#f2c75a"
+        self.THEME_pri_light = '#fadf9b' #"#f2c75a"
         self.THEME_sec = '#000000' #"#19194c" # DarkBlue / "#7d1923" #DarkRed
         self.THEME_acc = "#0080ff" # Blue
         self.THEME_txt = "#787777" # Grey

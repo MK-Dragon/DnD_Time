@@ -206,4 +206,17 @@
 
 <PopupRolls>
     container: container
-    id: container
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: "12dp"
+        size_hint_y: None
+        id: container
+
+        MDLabel:
+            id: label
+            text: "Hello!"
+            adaptive_size: True
+            color: app.THEME_txt
+            pos: "12dp", "12dp"
+            bold: True
