@@ -8,6 +8,8 @@ from kivymd.icon_definitions import md_icons
 from kivymd.app import MDApp
 from kivymd.uix.list import OneLineIconListItem
 
+from kivy.core.window import Window # to change Window size
+
 
 Builder.load_string(
     '''
@@ -93,5 +95,5 @@ class MainApp(MDApp):
     def on_start(self):
         self.screen.set_list_md_icons()
 
-
+Window.size = (405, 600) # To open window in 400x600
 MainApp().run()

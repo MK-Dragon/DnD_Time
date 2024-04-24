@@ -26,15 +26,15 @@
             id: reload_btn_icon
             title: "Server List:"
             elevation: 1
-            md_bg_color: app.theme_cls.accent_color
+            md_bg_color: app.THEME_pri #app.theme_cls.accent_color
             #left_action_items:[["menu", lambda x: nav_drawer.set_state("open")]]
             right_action_items: [["dice-d20-outline", lambda x: root.dysplay_disce_card()],["reload", lambda x: root.go_to_screen2()]]
 
 
         MDBottomNavigation:
-            panel_color: "orange"
-            selected_color_background: '#0080ff' # '#2874ff'
-            text_color_active: (.1, .1 , .3, 1)
+            panel_color: app.THEME_pri #"orange"
+            selected_color_background: app.THEME_acc #'#0080ff' # '#2874ff'
+            text_color_active: app.THEME_sec #(.1, .1 , .3, 1)
 
             MDBottomNavigationItem:
                 name: 'screen 1'
@@ -61,7 +61,7 @@
                         spacing: "15dp"
 
                         MDRectangleFlatIconButton:
-                            icon: "diamond-stone"
+                            icon: "reload" #"diamond-stone"
                             text: "Reset Dice"
                             theme_text_color: "Custom"
                             text_color: "blue"
@@ -70,9 +70,12 @@
                             icon_color: "orange"
                             pos_hint: {"center_x": .4, "center_y": .4}# only x works here
                             size_hint: (0.4), None
+                            on_release:
+                                root.reset_dice()
+                                root.display_disce_card()
 
                         MDRectangleFlatIconButton:
-                            icon: "duck"
+                            icon: "dice-multiple" #"duck"
                             text: "Roll All Dice!"
                             theme_text_color: "Custom"
                             text_color: "green"
@@ -82,7 +85,7 @@
                             pos_hint: {"center_x": .6, "center_y": .1}# only x works here
                             size_hint: (0.4), None
                             on_release:
-                                root.roll_dice()
+                                root.roll_dice_button()
 
             MDBottomNavigationItem:
                 name: 'screen 2'
@@ -170,6 +173,7 @@
     padding: 10
     size_hint: (0.3), None
     size: root.width, "100dp"
+    md_bg_color: app.THEME_pri_light
 
     MDRelativeLayout:
         MDIconButton:
@@ -195,6 +199,11 @@
             id: label
             text: root.text
             adaptive_size: True
-            color: "grey"
+            color: app.THEME_txt
             pos: "12dp", "12dp"
             bold: True
+
+
+<PopupRolls>
+    container: container
+    id: container
