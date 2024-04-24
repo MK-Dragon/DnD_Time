@@ -92,7 +92,7 @@ class MainWindow(Screen):
         dialog = None # Reset
         results = [] # ('d6, [3,6,1], 10)
 
-        print("\nRolling:")
+        #print("\nRolling:")
         for d in self.dice_to_roll:
             num_rolls = self.dice_to_roll[d]
             if num_rolls > 0:
@@ -103,17 +103,19 @@ class MainWindow(Screen):
 
         # sorting:
         items_roll = []
-        print("resultados:")
+        #print("resultados:")
         for i in results:
             dice, rolls, total = i
+            dice = f'dice-{dice}'
             rolls_str = ''
             for val in rolls:
-                rolls_str += f' [{val}]'
-            print(f'{rolls_str = }')
+                rolls_str += f' [ {val} ]'
+            rolls_str += f' = {total}'
+            #print(f'{rolls_str = }')
 
             items_roll.append(
                 OneLineAvatarIconListItem(
-                    IconLeftWidget(icon="duck"),
+                    IconLeftWidget(icon=dice),
                     text=rolls_str
                 )
             )
