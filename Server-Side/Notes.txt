@@ -1,0 +1,23 @@
+to run Server:
+
+run the Server_Main.py
+
+or
+
+1) cd into Server folder
+2) run: uvicorn Server_Main:app --reload
+
+Note:
+if Server_Main.py changes Uvicorn reloads the server. (bug...)
+127.0.0.1:8000
+
+
+
+More info:
+
+How to Use FastAPI: A Detailed Python Tutorial by ArjanCodes
+https://www.youtube.com/watch?v=SORiTsvnU28&list=PLC0nd42SBTaO3aajVi2FomC86q6TeRM_Y&index=4
+
+
+
+
