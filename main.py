@@ -31,19 +31,21 @@ def Roll_Dice(num_rolls:int, dice:int) -> list:
 
 
 class MainWindow(Screen):
-    '''Using root. from KV file you can use funtions from the Class.'''
+    '''Using root. from KV file you can use functions from the Class.'''
 
     container = ObjectProperty(None)
     dialog = None
 
     dice = [4, 6, 8, 10, 12, 20]
     dice_to_roll = {}
+    dice_prop = {} # {id: DiceCard(instance)} -> dice_prop[id].text = "Hello" to update text!
 
     def on_kv_post(self, base_widget):
         self.reset_dice()
         self.display_disce_card()
 
     def display_disce_card(self):
+        self.dice_prop = {}
         # Clear widget
         self.ids.container.clear_widgets(children=None)
 
@@ -56,7 +58,23 @@ class MainWindow(Screen):
             rad = rad_a if a % 2 == 0 else rad_b
             a += 1
 
-            self.ids.container.add_widget(
+            dice_card = DiceCard(
+                    radius = rad,
+                    card_id=f'{i}',
+                    line_color=(0.2, 0.2, 0.2, 0.8),
+                    style="elevated",
+                    text=f'Roll: {self.dice_to_roll[f"{i}"]}d{i}',
+                    dice_icon=f'dice-d{i}',
+                    #md_bg_color= "#f6eeee",
+                    shadow_softness=2,
+                    shadow_offset=(0, 1)
+                )
+            print(f'\n\nDice Card: {i}[{type(i)}]\n\n')
+            self.dice_prop.update({i: dice_card})
+            self.ids.container.add_widget(self.dice_prop[i])
+
+            # Deprecated
+            '''self.ids.container.add_widget(
                 DiceCard(
                     radius = rad,
                     card_id=f'{i}',
@@ -68,17 +86,22 @@ class MainWindow(Screen):
                     shadow_softness=2,
                     shadow_offset=(0, 1)
                 )
-            )
+            )'''
+
+    def update_dice_card(self, dice:int):
+        self.dice_prop[int(dice)].text = f'Roll: {self.dice_to_roll[f"{dice}"]}d{dice}'
 
     def plus_button(self, id):
+        print(f'\nplus id: {id}[{type(id)}]\n') # id == int
         self.dice_to_roll[f'{id}'] += 1
-        self.display_disce_card()
+        #self.display_disce_card() # deprecated
+        self.update_dice_card(id)
 
     def minus_button(self, id):
-
         if self.dice_to_roll[f'{id}'] > 0:
             self.dice_to_roll[f'{id}'] -= 1
-            self.display_disce_card()
+            #self.display_disce_card() # deprecated
+            self.update_dice_card(id)
 
     def icon_button(self, id):
         #print(f'Icon [{id}]')

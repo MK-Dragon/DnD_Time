@@ -11,6 +11,9 @@ Note:
 if Server_Main.py changes Uvicorn reloads the server. (bug...)
 127.0.0.1:8000
 
+Documentation:
+127.0.0.1:8000/docs
+
 
 
 More info:
