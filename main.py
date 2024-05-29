@@ -4,6 +4,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.properties import ObjectProperty
 from kivy.core.window import Window # Remove before py --> apk
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
 
 #KivyMD:
 from kivymd.app import MDApp
@@ -11,7 +12,9 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.list import IconLeftWidget
-from kivymd.uix.list import OneLineAvatarIconListItem
+from kivymd.uix.list import OneLineAvatarIconListItem, TwoLineAvatarIconListItem, TwoLineIconListItem
+from kivymd.uix.textfield import MDTextField
+
 
 #Others:
 from random import randint, choice
@@ -42,17 +45,19 @@ class MainWindow(Screen):
 
     def on_kv_post(self, base_widget):
         self.reset_dice()
-        self.display_disce_card()
+        self.display_dice_card()
 
-    def display_disce_card(self):
+    def display_dice_card(self):
         self.dice_prop = {}
         # Clear widget
         self.ids.container.clear_widgets(children=None)
 
         # radius change
         a = 0
-        rad_b = (5, 30, 5, 30)
-        rad_a = (30, 5, 30, 5)
+        #rad_b = (5, 30, 5, 30)
+        #rad_a = (30, 5, 30, 5)
+        rad_b = (45, 15, 15, 45) # |) (|
+        rad_a = (15, 45, 45, 15)
 
         for i in self.dice:
             rad = rad_a if a % 2 == 0 else rad_b
@@ -69,7 +74,7 @@ class MainWindow(Screen):
                     shadow_softness=2,
                     shadow_offset=(0, 1)
                 )
-            print(f'\n\nDice Card: {i}[{type(i)}]\n\n')
+            #print(f'\n\nDice Card: {i}[{type(i)}]\n\n')
             self.dice_prop.update({i: dice_card})
             self.ids.container.add_widget(self.dice_prop[i])
 
@@ -92,7 +97,7 @@ class MainWindow(Screen):
         self.dice_prop[int(dice)].text = f'Roll: {self.dice_to_roll[f"{dice}"]}d{dice}'
 
     def plus_button(self, id):
-        print(f'\nplus id: {id}[{type(id)}]\n') # id == int
+        #print(f'\nplus id: {id}[{type(id)}]\n') # id == int
         self.dice_to_roll[f'{id}'] += 1
         #self.display_disce_card() # deprecated
         self.update_dice_card(id)
@@ -112,8 +117,8 @@ class MainWindow(Screen):
             self.dice_to_roll.update({f'{i}': 0})
 
     def roll_dice_button(self):
-        dialog = None # Reset
-        results = [] # ('d6, [3,6,1], 10)
+        #dialog = None # Reset
+        results:tuple = [] # like: ('d6, [3,6,1], 10)
 
         #print("\nRolling:")
         for d in self.dice_to_roll:
@@ -129,17 +134,20 @@ class MainWindow(Screen):
         #print("resultados:")
         for i in results:
             dice, rolls, total = i
-            dice = f'dice-{dice}'
+            #dice = f'dice-{dice}'
             rolls_str = ''
             for val in rolls:
-                rolls_str += f' [ {val} ]'
-            rolls_str += f' = {total}'
+                rolls_str += f'({val}) '
+            #rolls_str += f' = {total}'
             #print(f'{rolls_str = }')
 
+            # TwoLineIconListItem # TwoLineAvatarIconListItem
+
             items_roll.append(
-                OneLineAvatarIconListItem(
-                    IconLeftWidget(icon=dice),
-                    text=rolls_str
+                TwoLineIconListItem(
+                    IconLeftWidget(icon=f'dice-{dice}'),
+                    text=f'{len(rolls)}{dice} = {total}',
+                    secondary_text=rolls_str
                 )
             )
             #print('\t', i)

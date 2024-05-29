@@ -24,11 +24,11 @@
 
         MDTopAppBar:
             id: reload_btn_icon
-            title: "Server List:"
+            title: "D&D Time!"
             elevation: 1
             md_bg_color: app.THEME_pri #app.theme_cls.accent_color
             #left_action_items:[["menu", lambda x: nav_drawer.set_state("open")]]
-            right_action_items: [["dice-d20-outline", lambda x: root.dysplay_disce_card()],["reload", lambda x: root.go_to_screen2()]]
+            #right_action_items: [["dice-d20-outline", lambda x: root.display_dice_card()],["reload", lambda x: root.go_to_screen2()]]
 
 
         MDBottomNavigation:
@@ -174,6 +174,7 @@
     size_hint: (0.3), None
     size: root.width, "100dp"
     md_bg_color: app.THEME_pri_light
+    elevation: 3
 
     MDRelativeLayout:
         MDIconButton:
