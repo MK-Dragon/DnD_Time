@@ -193,7 +193,7 @@ class Main(MDApp):
         #self.theme_cls.primary_palette = "LightBlue"
         #self.theme_cls.accent_palette = "Orange"
         self.THEME_pri = "#fcbc0d" # Orange
-        self.THEME_pri_light = '#fadf9b' #"#f2c75a"
+        self.THEME_pri_light = "#80fc4e" #'#fadf9b' #"#f2c75a"
         self.THEME_sec = '#000000' #"#19194c" # DarkBlue / "#7d1923" #DarkRed
         self.THEME_acc = "#0080ff" # Blue
         self.THEME_txt = "#787777" # Grey
