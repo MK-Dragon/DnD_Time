@@ -11,7 +11,7 @@ from kivymd.app import MDApp
 from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
-from kivymd.uix.list import IconLeftWidget
+from kivymd.uix.list import IconLeftWidget, IconRightWidget
 from kivymd.uix.list import OneLineAvatarIconListItem, TwoLineAvatarIconListItem, TwoLineIconListItem
 from kivymd.uix.textfield import MDTextField
 
@@ -44,7 +44,11 @@ class MainWindow(Screen):
     dice_prop = {} # {id: DiceCard(instance)} -> dice_prop[id].text = "Hello" to update text!
 
     def on_kv_post(self, base_widget):
-        self.reset_dice()
+        #self.reset_dice() # Deprecated
+        # Set Dice to Zero
+        for i in self.dice:
+            print(f'\nreset i: {i}[{type(i)}]\n') # id == str ( 2, 4, etc.)
+            self.dice_to_roll.update({f'{i}': 0})
         self.display_dice_card()
 
     def display_dice_card(self):
@@ -93,11 +97,11 @@ class MainWindow(Screen):
                 )
             )'''
 
-    def update_dice_card(self, dice:int):
+    def update_dice_card(self, dice:str):
         self.dice_prop[int(dice)].text = f'Roll: {self.dice_to_roll[f"{dice}"]}d{dice}'
 
     def plus_button(self, id):
-        #print(f'\nplus id: {id}[{type(id)}]\n') # id == int
+        #print(f'\nplus id: {id}[{type(id)}]\n') # id == str ( 2, 4, etc.)
         self.dice_to_roll[f'{id}'] += 1
         #self.display_disce_card() # deprecated
         self.update_dice_card(id)
@@ -110,15 +114,46 @@ class MainWindow(Screen):
 
     def icon_button(self, id):
         #print(f'Icon [{id}]')
-        print(self.dice_to_roll)
+        #print(f'Roll a d{id} -> {Roll_Dice(1, dice=int(id))[0]}')
+        #print(self.dice_to_roll)
+
+        items_roll:list = []
+        items_roll.append(
+            OneLineAvatarIconListItem(
+                IconLeftWidget(icon=f'dice-d{id}'),
+                IconRightWidget(icon=f'dice-d{id}'),
+                text=f'd{id} = [ {Roll_Dice(1, dice=int(id))[0]} ]'
+            ),
+
+        )
+        # print('\t', i)
+
+        # Popup:
+        self.dialog = MDDialog(
+            title="Rolls:",
+            type="confirmation",
+            items=items_roll,
+            content_cls=PopupRolls(),
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    text_color=main_app.theme_cls.primary_color,
+                    on_release=lambda x: self.dialog.dismiss()
+                ),
+            ],
+        )
+        self.dialog.open()
 
     def reset_dice(self):
         for i in self.dice:
+            #print(f'\nreset i: {i}[{type(i)}]\n') # id == str ( 2, 4, etc.)
             self.dice_to_roll.update({f'{i}': 0})
+            self.update_dice_card(f'{i}')
 
     def roll_dice_button(self):
         #dialog = None # Reset
-        results:tuple = [] # like: ('d6, [3,6,1], 10)
+        results:list[tuple] = [] # like: [('d6, [3,6,1], 10),]
 
         #print("\nRolling:")
         for d in self.dice_to_roll:
@@ -137,7 +172,7 @@ class MainWindow(Screen):
             #dice = f'dice-{dice}'
             rolls_str = ''
             for val in rolls:
-                rolls_str += f'({val}) '
+                rolls_str += f'[{val}] '
             #rolls_str += f' = {total}'
             #print(f'{rolls_str = }')
 
