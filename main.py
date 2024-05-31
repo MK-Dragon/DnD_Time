@@ -12,12 +12,13 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.list import IconLeftWidget, IconRightWidget
-from kivymd.uix.list import OneLineAvatarIconListItem, TwoLineAvatarIconListItem, TwoLineIconListItem
+from kivymd.uix.list import OneLineAvatarIconListItem, TwoLineAvatarIconListItem, TwoLineIconListItem, OneLineListItem
 from kivymd.uix.textfield import MDTextField
 
 
 #Others:
 from random import randint, choice
+import json
 
 
 
@@ -47,7 +48,7 @@ class MainWindow(Screen):
         #self.reset_dice() # Deprecated
         # Set Dice to Zero
         for i in self.dice:
-            print(f'\nreset i: {i}[{type(i)}]\n') # id == str ( 2, 4, etc.)
+            #print(f'\nreset i: {i}[{type(i)}]\n') # id == str ( 2, 4, etc.)
             self.dice_to_roll.update({f'{i}': 0})
         self.display_dice_card()
 
@@ -214,8 +215,25 @@ class DiceCard(MDCard):
 class PopupRolls(BoxLayout):
     pass
 
+class Content(BoxLayout):
+    container = ObjectProperty(None)
+
 
 class Main(MDApp):
+    # Default Theme:
+    user_theme: dict = {
+        'style': 'Light',
+        'primary': 'LightBlue',
+        'accent': 'Blue'
+    }
+
+    colors = ['Red', 'Pink', 'Purple', 'DeepPurple', 'Indigo',
+              'Blue', 'LightBlue', 'Cyan', 'Teal','Green',
+              'LightGreen', 'Lime', 'Yellow', 'Amber', 'Orange',
+              'DeepOrange', 'Brown', 'Gray', 'BlueGray']
+
+    dialog = None
+
     def __init__(self, **kwargs):
         self.title = "D&D Time!"
         super().__init__(**kwargs)
@@ -223,15 +241,20 @@ class Main(MDApp):
     def build(self):
         '''using app.mainwindow from kv file can use funtions from MainWindow() Class!!'''
 
-        # Theme:
-        self.theme_cls.theme_style = 'Light' #"Dark"
-        #self.theme_cls.primary_palette = "LightBlue"
-        #self.theme_cls.accent_palette = "Orange"
-        self.THEME_pri = "#fcbc0d" # Orange
-        self.THEME_pri_light = "#80fc4e" #'#fadf9b' #"#f2c75a"
-        self.THEME_sec = '#000000' #"#19194c" # DarkBlue / "#7d1923" #DarkRed
-        self.THEME_acc = "#0080ff" # Blue
-        self.THEME_txt = "#787777" # Grey
+
+
+        # Read User Theme from JSON File
+        try:
+            self.Read_Theme_File()
+            print("\n** User Theme **")
+            print(self.user_theme)
+
+        # if file doesn't exist make one!
+        except:
+            self.Write_Theme_File()
+            print("Theme File Created")
+
+        self.apply_user_theme()
 
         # Screen Management:
         self.screen_manager = ScreenManager()
@@ -242,6 +265,124 @@ class Main(MDApp):
         self.screen_manager.add_widget(screen)
 
         return self.screen_manager
+
+    def apply_user_theme(self) -> None:
+        '''
+        Applies User Theme to App
+        This is used to Update the Theme if it Changes
+        :return:
+        '''
+        # Theme:
+        self.theme_cls.theme_style = self.user_theme['style']
+        self.theme_cls.primary_palette = self.user_theme['primary'] #'Blue' # self.user_theme['primary'] # "LightBlue"
+        self.theme_cls.accent_palette = self.user_theme['accent']
+
+        # TODO: deprecate Theme below...
+        self.THEME_pri = "#fcbc0d"  # Orange
+        self.THEME_pri_light = "#80fc4e"  # '#fadf9b' #"#f2c75a"
+        self.THEME_sec = '#000000'  # "#19194c" # DarkBlue / "#7d1923" #DarkRed
+        self.THEME_acc = "#0080ff"  # Blue
+        self.THEME_txt = "#787878"  # Grey
+
+    def Read_Theme_File(self) -> None:
+        '''
+        Reads User Setting and updates the Theme
+        :return:
+        '''
+        with open('user_settings.json') as json_file:
+            data = json.load(json_file)
+
+            print(f'{type(data) = }')
+            print(f'{data = }')
+
+            self.user_theme = data
+
+    def Write_Theme_File(self) -> None:
+        with open("user_settings.json", "w") as outfile:
+            json.dump(self.user_theme, outfile, indent = 4, sort_keys= True)
+
+    def change_theme_setting(self, setting:str, color:str = '') -> None:
+        print(f'\n\tSetting {setting}')
+        print(f'\t\t\t{self.user_theme[setting] = }')
+
+        if setting == 'style':
+            self.user_theme['style'] = 'Dark' if self.user_theme['style'] == 'Light' else 'Light'
+
+        elif setting == 'accent':
+            self.user_theme['accent'] = color
+
+        elif setting == 'primary':
+            self.user_theme['primary'] = color
+
+        print(f'\t\t\t{self.user_theme[setting] = } -> {color = }\n')
+
+        # Save Changes
+        self.Write_Theme_File()
+        # Update Theme
+        self.apply_user_theme()
+
+    def popup_color_picker(self, setting):
+        print(f'{setting = } - {type(setting) = }')
+
+        content = Content()
+
+        for color in self.colors:
+            print(f'\t{color}')
+            if setting == 'Primary':
+                content.ids.container.add_widget(
+                    OneLineAvatarIconListItem(
+                        IconLeftWidget(
+                            icon='duck'
+                            # theme_icon_color="Custom",
+                            # icon_color=color
+                        ),
+                        text=f"{color}",
+                        id=color,
+                        on_release=self.pick_primary_color
+                    )
+                )
+            else:
+                content.ids.container.add_widget(
+                    OneLineAvatarIconListItem(
+                        IconLeftWidget(
+                            icon='duck'
+                            # theme_icon_color="Custom",
+                            # icon_color=color
+                        ),
+                        text=f"{color}",
+                        id=color,
+                        on_release=self.pick_accent_color
+                    )
+                )
+
+        self.dialog = MDDialog(
+            title=setting,
+            type="custom",
+            content_cls=content,
+            buttons=[
+                MDFlatButton(
+                    text="CANCEL",
+                    theme_text_color="Custom",
+                    text_color=self.theme_cls.primary_color,
+                    on_release=lambda x: self.dialog.dismiss()
+                ),
+            ],
+        )
+
+        self.dialog.open()
+
+    def pick_primary_color(self, instance):
+        print(f'[{instance.id}] -> Primary')
+        self.dialog.dismiss()
+        self.change_theme_setting('primary', instance.id)
+        self.apply_user_theme()
+
+    def pick_accent_color(self, instance):
+        print(f'[{instance.id}] -> Accent')
+        self.dialog.dismiss()
+        self.change_theme_setting('accent', instance.id)
+        self.apply_user_theme()
+
 
 
 
