@@ -47,7 +47,10 @@ if __name__ == '__main__':
     print("\n---//---\n")
 
     print("test 2:")
+    # get time on client
     time_clint = get_client_time()
+    # sending data with time data
     time.sleep(0.5)
+    # validate time data
     status = compere_time(time_clint, 1.2)
-    print(f"Status: {status}")
+    print(f"Status: [{status}]")
