@@ -218,29 +218,41 @@ class MainWindow(Screen):
         list_star = []
 
         # Nums
+        #print(f'\n\nNum:')
         for d in range(n_num):
+            #print(f'\t{d}:')
             while True:
                 rr = Roll_Dice(1, num_max)
-                if rr not in list_num:
-                    list_num.append(rr[0])
-                    break
+                #print(f'\t\t{rr}', end=' - ')
+                num = rr[0]
 
+                if num not in list_num:
+                    #print('ok')
+                    list_num.append(num)
+                    break
+                #print('NOK')
+
+        # Stars
         for d in range(n_star):
             while True:
                 rr = Roll_Dice(1, star_max)
-                if rr not in list_star:
-                    list_star.append(rr[0])
+                num = rr[0]
+                if num not in list_star:
+                    list_star.append(num)
                     break
 
-        #print(f'\tNum {list_num.sort()}')
-        #print(f'\tStar {list_star.sort()}\n')
+        #print(f'\n\tNum {list_num}')
+        #print(f'\tStar {list_star}\n')
+
+        list_num.sort()
+        list_star.sort()
 
         str_num = ''
         a = 0
         for i in list_num:
             str_num += f'{i}'
             if a != n_num-1:
-                str_num += ' - '
+                str_num += '_'
             a += 1
 
         str_star = ''
@@ -248,7 +260,7 @@ class MainWindow(Screen):
         for i in list_star:
             str_star += f'{i}'
             if a != n_star-1:
-                str_star += ' - '
+                str_star += '_'
             a += 1
 
 
@@ -467,6 +479,6 @@ class Main(MDApp):
 
 
 if __name__ == '__main__':
-    Window.size = (405, 700)  # Remove before py --> apk
+    #Window.size = (405, 700)  # Remove before py --> apk
     main_app = Main()
     main_app.run()
