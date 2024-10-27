@@ -94,24 +94,35 @@
                 icon: 'axe-battle'
                 #badge_icon: "dice-d20-outline"
 
-                BoxLayout:
-                    orientation: 'vertical'
-                    size: root.width, root.height
-                    padding: 30
-                    spacing: "15dp"
+                ScrollView:
+                    MDList:
 
-                    MDRectangleFlatIconButton:
-                        icon: "diamond-stone"
-                        text: "Items"
-                        theme_text_color: "Custom"
-                        text_color: "blue"
-                        line_color: "red"
-                        theme_icon_color: "Custom"
-                        icon_color: "orange"
-                        pos_hint: {"center_x": .4, "center_y": .4}# only x works here
-                        size_hint: (0.4), None
-                        on_release:
-                            app.theme_cls.theme_style = 'Dark'
+                        MDRectangleFlatIconButton:
+                            icon: "currency-eur"
+                            text: "Euro Milhões"
+                            theme_text_color: "Custom"
+                            text_color: "blue"
+                            line_color: "red"
+                            theme_icon_color: "Custom"
+                            icon_color: "orange"
+                            pos_hint: {"center_x": .4, "center_y": .4}# only x works here
+                            size_hint: (0.4)None
+                            on_release:
+                                root.roll_euro_button(50, 5, 12, 2)
+
+                        MDRectangleFlatIconButton:
+                            icon: "sleep"
+                            text: "EuroDreams"
+                            theme_text_color: "Custom"
+                            text_color: "blue"
+                            line_color: "red"
+                            theme_icon_color: "Custom"
+                            icon_color: "orange"
+                            pos_hint: {"center_x": .4, "center_y": .4}# only x works here
+                            size_hint: (0.4), None
+                            on_release:
+                                root.roll_euro_button(40, 6, 5, 1)
+
 
             MDBottomNavigationItem:
                 name: 'screen 3'

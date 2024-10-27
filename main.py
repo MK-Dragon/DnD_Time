@@ -205,6 +205,86 @@ class MainWindow(Screen):
         )
         self.dialog.open()
 
+    def roll_euro_button(self, num_max, n_num, star_max, n_star):
+        '''
+        EuroMilhões: 5x (1-50) + 2x (1-12)
+
+        EuroDreams: 6x (1-40) + 1x (1-5)
+        '''
+
+        #print("\nRolling Euro Milhões:")
+
+        list_num = []
+        list_star = []
+
+        # Nums
+        for d in range(n_num):
+            while True:
+                rr = Roll_Dice(1, num_max)
+                if rr not in list_num:
+                    list_num.append(rr[0])
+                    break
+
+        for d in range(n_star):
+            while True:
+                rr = Roll_Dice(1, star_max)
+                if rr not in list_star:
+                    list_star.append(rr[0])
+                    break
+
+        #print(f'\tNum {list_num.sort()}')
+        #print(f'\tStar {list_star.sort()}\n')
+
+        str_num = ''
+        a = 0
+        for i in list_num:
+            str_num += f'{i}'
+            if a != n_num-1:
+                str_num += ' - '
+            a += 1
+
+        str_star = ''
+        a = 0
+        for i in list_star:
+            str_star += f'{i}'
+            if a != n_star-1:
+                str_star += ' - '
+            a += 1
+
+
+        #print(f'\tNum {str_num}')
+        #print(f'\tStar {str_star}\n')
+
+        # sorting:
+        items_roll = []
+
+        # TwoLineIconListItem # TwoLineAvatarIconListItem
+
+        items_roll.append(
+            TwoLineIconListItem(
+                IconLeftWidget(icon=f'dice-5'),
+                text=f'{str_num}',
+                secondary_text=f'{str_star}'
+            )
+        )
+
+        # Popup:
+        self.dialog = MDDialog(
+            title="Euro Rolls:",
+            type="confirmation",
+            items=items_roll,
+            content_cls=PopupRolls(),
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    text_color=main_app.theme_cls.primary_color,
+                    on_release=lambda x: self.dialog.dismiss()
+                ),
+            ],
+        )
+        self.dialog.open()
+
 
 
 class DiceCard(MDCard):
